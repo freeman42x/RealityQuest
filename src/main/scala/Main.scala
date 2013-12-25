@@ -1,6 +1,8 @@
+//import org.joda.time.DateTime
 import scala.sys.process._
 import scala.concurrent.duration._
 import scala.slick.driver.HsqldbDriver.simple._
+//import com.github.tototoshi.slick.JodaSupport._
 
 object Main extends App
 {
@@ -9,6 +11,7 @@ object Main extends App
     class LogItems(tag: Tag) extends Table[LogItem](tag, "LogItems")
     {
         def Id = column[Option[Int]]("Id", O.PrimaryKey, O.AutoInc)
+        //def LogDateTime = column[DateTime]("LogDateTime")
         def WindowTitle = column[String]("WindowTitle")
         def WindowClass = column[String]("WindowClass")
         def * = (Id, WindowTitle, WindowClass) <> (LogItem.tupled, LogItem.unapply)
@@ -20,15 +23,17 @@ object Main extends App
     {
         implicit session =>
 
+            //logItems.ddl.create
             val system = akka.actor.ActorSystem("system")
             import system.dispatcher
-            system.scheduler.schedule(0 milliseconds, 3000 milliseconds, new Runnable()
+            system.scheduler.schedule(0 milliseconds, 500 milliseconds, new Runnable()
             {
-                def run() =
+                def run(): Unit =
                 {
                     val data = ("ActiveWindowTitle.exe" !!).split("[\\r\\n]+")
-                    val windowTitle = data(0)
-                    val windowClass = if (data.length == 2) data(1).trim else ""
+                    if (data.length == 0) return
+                    val windowTitle = if (data.length >= 1) data(0).trim else ""
+                    val windowClass = if (data.length >= 2) data(1).trim else ""
                     logItems += LogItem(None, windowTitle, windowClass)
                 }
             })

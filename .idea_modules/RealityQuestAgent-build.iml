@@ -5,14 +5,12 @@
     <output-test url="file://$MODULE_DIR$/../project/target/idea-test-classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../project">
+      <sourceFolder url="file://$MODULE_DIR$/../project" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../project/project" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/../project/boot" />
       <excludeFolder url="file://$MODULE_DIR$/../project/project/project/target" />
       <excludeFolder url="file://$MODULE_DIR$/../project/project/target" />
       <excludeFolder url="file://$MODULE_DIR$/../project/target" />
-    </content>
-    <content url="file://$MODULE_DIR$/../src">
-      <sourceFolder url="file://$MODULE_DIR$/../src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

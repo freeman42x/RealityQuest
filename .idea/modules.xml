@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea_modules/RealityQuestAgent-build.iml" filepath="$PROJECT_DIR$/.idea_modules/RealityQuestAgent-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea_modules/realityquestagent.iml" filepath="$PROJECT_DIR$/.idea_modules/realityquestagent.iml" />
     </modules>
   </component>
