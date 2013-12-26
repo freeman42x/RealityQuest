@@ -1,21 +1,21 @@
-//import org.joda.time.DateTime
 import scala.sys.process._
 import scala.concurrent.duration._
 import scala.slick.driver.H2Driver.simple._
-//import com.github.tototoshi.slick.JodaSupport._
+import com.github.nscala_time.time.Imports._
+import com.github.tototoshi.slick.JodaSupport._
 
 object Main extends App
 {
     val connection = "jdbc:h2:db/database;AUTO_SERVER=TRUE"
-    case class LogItem(Id: Option[Int] = None, WindowTitle: String, WindowClass: String)
+    case class LogItem(Id: Option[Int] = None, LogDateTime: DateTime, WindowTitle: String, WindowClass: String)
 
     class LogItems(tag: Tag) extends Table[LogItem](tag, "LogItems")
     {
         def Id = column[Option[Int]]("Id", O.PrimaryKey, O.AutoInc)
-        //def LogDateTime = column[DateTime]("LogDateTime")
+        def LogDateTime = column[DateTime]("LogDateTime")
         def WindowTitle = column[String]("WindowTitle")
         def WindowClass = column[String]("WindowClass")
-        def * = (Id, WindowTitle, WindowClass) <> (LogItem.tupled, LogItem.unapply)
+        def * = (Id, LogDateTime, WindowTitle, WindowClass) <> (LogItem.tupled, LogItem.unapply)
     }
 
     val logItems = TableQuery[LogItems]
@@ -28,7 +28,7 @@ object Main extends App
 
     val system = akka.actor.ActorSystem("system")
     import system.dispatcher
-    system.scheduler.schedule(0 milliseconds, 2000 milliseconds, new Runnable()
+    system.scheduler.schedule(0 milliseconds, 1000 milliseconds, new Runnable()
     {
         def run(): Unit =
         {
@@ -40,7 +40,7 @@ object Main extends App
                     if (data.length == 0) return
                     val windowTitle = if (data.length >= 1) data(0).trim else ""
                     val windowClass = if (data.length >= 2) data(1).trim else ""
-                    logItems += LogItem(None, windowTitle, windowClass)
+                    logItems += LogItem(None, DateTime.now, windowTitle, windowClass)
             }
         }
     })
