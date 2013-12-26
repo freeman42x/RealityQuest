@@ -14,7 +14,7 @@ libraryDependencies += "com.typesafe.slick" % "slick_2.10" % "2.0.0-M3"
 
 libraryDependencies += "com.github.tototoshi" %% "slick-joda-mapper" % "1.0.0-SNAPSHOT"
 
-libraryDependencies += "org.hsqldb" % "hsqldb" % "2.3.1"
+libraryDependencies += "com.h2database" % "h2" % "1.3.174"
 
 libraryDependencies += "joda-time" % "joda-time" % "2.3"
 
