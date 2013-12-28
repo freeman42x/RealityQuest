@@ -1,13 +1,16 @@
-import scala.sys.process._
+import java.io.File
 import scala.concurrent.duration._
 import scala.slick.driver.H2Driver.simple._
 import com.github.nscala_time.time.Imports._
 import com.github.tototoshi.slick.JodaSupport._
+import com.sun.jna._
+import com.sun.jna.platform.win32.User32
 
 object Main extends App
 {
     val connection = "jdbc:h2:db/database;AUTO_SERVER=TRUE"
     val driver = "org.h2.Driver"
+
     case class LogItem(Id: Option[Int] = None, BeginDateTime: DateTime, EndDateTime: DateTime, WindowTitle: String, WindowClass: String)
 
     class LogItems(tag: Tag) extends Table[LogItem](tag, "LogItems")
@@ -20,18 +23,25 @@ object Main extends App
         def * = (Id, BeginDateTime, EndDateTime, WindowTitle, WindowClass) <> (LogItem.tupled, LogItem.unapply)
     }
 
-    val logItems = TableQuery[LogItems]
+    def CollectData() =
+    {
+        val hwnd = User32.INSTANCE.GetForegroundWindow
+        val windowTextLength = User32.INSTANCE.GetWindowTextLength(hwnd) + 1
+        val windowText = new Array[Char](windowTextLength)
+        User32.INSTANCE.GetWindowText(hwnd, windowText, windowTextLength)
+        val windowClass = new Array[Char](256)
+        User32.INSTANCE.GetClassName(hwnd, windowClass, 256)
+        val dateTimeNow = DateTime.now
+        LogItem(None, dateTimeNow, dateTimeNow, Native.toString(windowText),Native.toString(windowClass))
+    }
 
-//    Database.forURL(connection, driver = driver) withSession
-//    {
-//        implicit session =>
-//            logItems.ddl.create
-//    }
+    val logItems = TableQuery[LogItems]
 
     var previousLogItem: Option[LogItem] = None
     Database.forURL(connection, driver = driver) withSession
     {
         implicit session =>
+            if (!new File("db/database.h2.db").exists()) logItems.ddl.create
             previousLogItem = logItems.sortBy(_.BeginDateTime.desc).firstOption
     }
 
@@ -43,18 +53,14 @@ object Main extends App
             Database.forURL(connection, driver = driver) withSession
             {
                 implicit session =>
-                    val rawData: String = "ActiveWindowTitle.exe".!!
-                    val data = rawData.split("[\\r\\n]+")
-                    if (data.length == 0) return
-                    val windowTitle = if (data.length >= 1) data(0).trim else ""
-                    val windowClass = if (data.length >= 2) data(1).trim else ""
+                    val logItem = CollectData()
+                    val windowTitle = logItem.WindowTitle
+                    val windowClass = logItem.WindowClass
 
                     def saveNewLogItem()
                     {
-                        val currentDateTime = DateTime.now
-                        val newLogItem = LogItem(None, currentDateTime, currentDateTime, windowTitle, windowClass)
-                        val newLogItemId = (logItems returning logItems.map(_.Id)) += newLogItem
-                        previousLogItem = Option(newLogItem.copy(Id = newLogItemId))
+                        val newLogItemId = (logItems returning logItems.map(_.Id)) += logItem
+                        previousLogItem = Option(logItem.copy(Id = newLogItemId))
                     }
 
                     previousLogItem match
