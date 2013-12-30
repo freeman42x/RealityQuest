@@ -59,7 +59,7 @@ object Main extends App
 
                     def saveNewLogItem()
                     {
-                        val newLogItemId = (logItems returning logItems.map(_.Id)) += logItem
+                        val newLogItemId = logItems returning logItems.map(_.Id) += logItem
                         previousLogItem = Option(logItem.copy(Id = newLogItemId))
                     }
 

@@ -1,3 +1,10 @@
+import sbtassembly.Plugin._
+import AssemblyKeys._
+
+assemblySettings
+
+jarName in assembly := "RealityQuestAgent.jar"
+
 name := "RealityQuestAgent"
  
 version := "1.0"
