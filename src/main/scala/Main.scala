@@ -1,3 +1,5 @@
+package org.github.razvanpanda
+
 import java.io.File
 import scala.concurrent.duration._
 import scala.slick.driver.H2Driver.simple._
@@ -6,7 +8,7 @@ import com.github.tototoshi.slick.JodaSupport._
 import com.sun.jna._
 import com.sun.jna.platform.win32.User32
 
-object Main extends App
+class Main
 {
     val connection = "jdbc:h2:db/database;AUTO_SERVER=TRUE"
     val driver = "org.h2.Driver"

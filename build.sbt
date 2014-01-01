@@ -9,7 +9,9 @@ name := "RealityQuestAgent"
  
 version := "1.0"
  
-scalaVersion := "2.10.2"
+scalaVersion := "2.10.3"
+
+unmanagedJars in Compile += Attributed.blank(file(System.getenv("JAVA_HOME") + "/jre/lib/jfxrt.jar"))
 
 resolvers ++= Seq(
     "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
@@ -26,5 +28,6 @@ libraryDependencies ++= Seq(
     "com.github.nscala-time" %% "nscala-time"       % "0.6.0",
     "com.github.tototoshi"   %% "slick-joda-mapper" % "1.0.0-SNAPSHOT",
     "net.java.dev.jna"       %  "jna"               % "4.0.0",
-    "net.java.dev.jna"       %  "platform"          % "3.5.2"
+    "net.java.dev.jna"       %  "platform"          % "3.5.2",
+    "org.scalafx"            %  "scalafx_2.10"      % "1.0.0-M6"
 )
