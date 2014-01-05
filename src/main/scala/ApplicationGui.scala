@@ -1,4 +1,4 @@
-package org.github.razvanpanda
+package com.github.razvanpanda.RealityQuest
 
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
@@ -15,6 +15,11 @@ import javafx.stage.{WindowEvent, Stage}
 import javax.imageio.ImageIO
 import javafx.event.EventHandler
 import java.awt.event.{ActionEvent, ActionListener}
+import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.webapp.WebAppContext
+import org.scalatra.servlet.ScalatraListener
+import org.eclipse.jetty.servlet.DefaultServlet
+import scala.concurrent.{ExecutionContext, Future}
 
 object ApplicationGui extends JFXApp
 {
@@ -146,5 +151,25 @@ object ApplicationGui extends JFXApp
     createTrayIcon(stage)
     firstTime = true
     Platform.setImplicitExit(false)
+    hide(stage)
     new Main
+
+    import ExecutionContext.Implicits.global
+    Future
+    {
+        val port = if (System.getenv("PORT") != null) System.getenv("PORT").toInt else 8080
+        val server = new Server(port)
+        val context = new WebAppContext()
+        context setContextPath "/"
+
+        val resourceBase = getClass.getClassLoader.getResource("webapp").toExternalForm
+        context.setResourceBase(resourceBase)
+        context.addEventListener(new ScalatraListener)
+        context.addServlet(classOf[DefaultServlet], "/?")
+
+        server.setHandler(context)
+
+        server.start()
+        server.join()
+    }
 }

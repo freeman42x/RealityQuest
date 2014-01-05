@@ -1,4 +1,4 @@
-package org.github.razvanpanda
+package com.github.razvanpanda.RealityQuest
 
 import java.io.File
 import scala.concurrent.duration._
