@@ -13,7 +13,6 @@ import javafx.application.Platform
 import java.awt._
 import javafx.stage.{WindowEvent, Stage}
 import javax.imageio.ImageIO
-import java.io.File
 import javafx.event.EventHandler
 import java.awt.event.{ActionEvent, ActionListener}
 
@@ -64,7 +63,7 @@ object ApplicationGui extends JFXApp
         {
             val tray: SystemTray = SystemTray.getSystemTray
             var image: Image = null
-            image = ImageIO.read(new File("src/main/resources/TrayIcon.png"))
+            image = ImageIO.read(getClass.getResource("/TrayIcon.png").openStream())
 
             stage.setOnCloseRequest(new EventHandler[WindowEvent]
             {
