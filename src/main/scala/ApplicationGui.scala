@@ -20,7 +20,6 @@ import org.eclipse.jetty.webapp.WebAppContext
 import org.scalatra.servlet.ScalatraListener
 import org.eclipse.jetty.servlet.DefaultServlet
 import scala.concurrent.{ExecutionContext, Future}
-import java.io.File
 
 object ApplicationGui extends JFXApp
 {
@@ -162,12 +161,15 @@ object ApplicationGui extends JFXApp
         val server = new Server(port)
         val context = new WebAppContext()
         context setContextPath "/"
-        val resourceBase = getClass.getClassLoader.getResource("webapp").toExternalForm
-        if (resourceBase.startsWith("jar:"))
-            context.setResourceBase(resourceBase)
+
+        if (getClass.getClassLoader.getResource("ScalatraBootstrap.class").getPath.startsWith("jar:"))
+        {
+            val webappPath = getClass.getClassLoader.getResource("webapp").toExternalForm
+            context.setResourceBase(webappPath)
+        }
         else
         {
-            context.setResourceBase("src/main/resources/webapp")
+            context.setResourceBase("src/main/resources_web/webapp")
             context.setInitParameter("org.eclipse.jetty.servlet.Default.maxCachedFiles", "0")
         }
 

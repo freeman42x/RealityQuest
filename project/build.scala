@@ -20,6 +20,7 @@ object build extends Build
             name := Name,
             version := Version,
             scalaVersion := ScalaVersion,
+            unmanagedResourceDirectories in Compile += baseDirectory.value / "src/main/resources_web",
             jarName in assembly := "RealityQuest.jar",
             mergeStrategy in assembly <<= (mergeStrategy in assembly)
             {
@@ -49,7 +50,7 @@ object build extends Build
                 "org.scalatra"            %% "scalatra"          % ScalatraVersion,
                 "org.scalatra"            %% "scalatra-specs2"   % ScalatraVersion % "test",
                 "org.eclipse.jetty"       %  "jetty-webapp"      % "8.1.8.v20121106" % "container;compile",
-                "org.eclipse.jetty.orbit" %  "javax.servlet"     % "3.0.0.v201112011016" % "container;provided;test" artifacts (Artifact("javax.servlet", "jar", "jar"))
+                "org.eclipse.jetty.orbit" %  "javax.servlet"     % "3.0.0.v201112011016" % "container;provided;test" artifacts Artifact("javax.servlet", "jar", "jar")
             )
         )
     )
