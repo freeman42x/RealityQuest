@@ -4,7 +4,7 @@ import java.io.File
 import scala.concurrent.duration._
 import scala.slick.driver.H2Driver.simple._
 import com.github.nscala_time.time.Imports._
-import com.github.tototoshi.slick.JodaSupport._
+import com.github.tototoshi.slick.H2JodaSupport._
 import com.sun.jna._
 import com.sun.jna.platform.win32.User32
 
