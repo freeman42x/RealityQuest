@@ -1,3 +1,5 @@
+package com.github.razvanpanda.realityquest
+
 import org.scalatra._
 import javax.servlet.ServletContext
 

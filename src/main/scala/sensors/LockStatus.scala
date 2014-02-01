@@ -1,4 +1,4 @@
-package com.github.razvanpanda.RealityQuest
+package com.github.razvanpanda.realityquest.sensors
 
 import com.sun.jna.WString
 import com.sun.jna.platform.win32.Kernel32

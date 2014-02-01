@@ -1,4 +1,4 @@
-package com.github.razvanpanda.RealityQuest
+package com.github.razvanpanda.realityquest.servlets
 
 import org.scalatra._
 import org.json4s.{DefaultFormats, Formats}
@@ -8,6 +8,7 @@ import scala.slick.driver.H2Driver.simple._
 import org.joda.time.DateTime
 import com.github.nscala_time.time.Imports._
 import com.github.tototoshi.slick.H2JodaSupport._
+import com.github.razvanpanda.realityquest.LogItemTable
 
 class ApiServlet extends ScalatraServlet with JacksonJsonSupport
 {
@@ -23,7 +24,7 @@ class ApiServlet extends ScalatraServlet with JacksonJsonSupport
         val connection = "jdbc:h2:db/database;AUTO_SERVER=TRUE"
         val driver = "org.h2.Driver"
 
-        val logItems = TableQuery[LogItems]
+        val logItems = TableQuery[LogItemTable]
 
         Database.forURL(connection, driver = driver) withSession
         {

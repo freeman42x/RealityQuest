@@ -1,4 +1,4 @@
-package com.github.razvanpanda.RealityQuest
+package com.github.razvanpanda.realityquest
 
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
@@ -15,53 +15,57 @@ import javafx.stage.{WindowEvent, Stage}
 import javax.imageio.ImageIO
 import javafx.event.EventHandler
 import java.awt.event.{ActionEvent, ActionListener}
-import org.eclipse.jetty.server.Server
-import org.eclipse.jetty.webapp.WebAppContext
-import org.scalatra.servlet.ScalatraListener
-import scala.concurrent.{ExecutionContext, Future}
 
-object ApplicationGui extends JFXApp
+object ApplicationMain extends JFXApp
 {
     private var firstTime = false
     private var trayIcon: TrayIcon = null
 
-    stage = new PrimaryStage
+    def start() =
     {
-        title = "RealityQuest"
-        width = 600
-        height = 170
-        resizable = false
-        scene = new Scene
+        stage = new PrimaryStage
         {
-            fill = WHITESMOKE
-            content = new HBox
+            title = "RealityQuest"
+            width = 600
+            height = 170
+            resizable = false
+            scene = new Scene
             {
-                content = Seq(new Text
+                fill = WHITESMOKE
+                content = new HBox
                 {
-                    text = "Reality"
-                    style = "-fx-font-size: 100pt"
-                    fill = new LinearGradient(
-                        endX = 0,
-                        stops = Stops(PALEGREEN, SEAGREEN))
-                }, new Text
-                {
-                    text = "Quest"
-                    style = "-fx-font-size: 100pt"
-                    fill = new LinearGradient(
-                        endX = 0,
-                        stops = Stops(CYAN, DODGERBLUE))
-                    effect = new DropShadow
+                    content = Seq(new Text
                     {
-                        color = DODGERBLUE
-                        radius = 25
-                        spread = 0.25
-                    }
-                })
+                        text = "Reality"
+                        style = "-fx-font-size: 100pt"
+                        fill = new LinearGradient(
+                            endX = 0,
+                            stops = Stops(PALEGREEN, SEAGREEN))
+                    }, new Text
+                    {
+                        text = "Quest"
+                        style = "-fx-font-size: 100pt"
+                        fill = new LinearGradient(
+                            endX = 0,
+                            stops = Stops(CYAN, DODGERBLUE))
+                        effect = new DropShadow
+                        {
+                            color = DODGERBLUE
+                            radius = 25
+                            spread = 0.25
+                        }
+                    })
+                }
             }
         }
+
+        createTrayIcon(stage)
+        firstTime = true
+        Platform.setImplicitExit(false)
+        hide(stage)
     }
 
-    def createTrayIcon(stage: Stage)
+    private def createTrayIcon(stage: Stage)
     {
         if (SystemTray.isSupported)
         {
@@ -147,38 +151,7 @@ object ApplicationGui extends JFXApp
         })
     }
 
-    createTrayIcon(stage)
-    firstTime = true
-    Platform.setImplicitExit(false)
-    hide(stage)
-
-    new Main
-
-    import ExecutionContext.Implicits.global
-    Future
-    {
-        val port = if (System.getenv("PORT") != null) System.getenv("PORT").toInt else 8080
-        val server = new Server(port)
-        val context = new WebAppContext()
-        context setContextPath "/"
-
-        if (getClass.getClassLoader.getResource("ScalatraBootstrap.class").getPath.startsWith("jar:"))
-        {
-            val webappPath = getClass.getClassLoader.getResource("webapp").toExternalForm
-            context.setResourceBase(webappPath)
-        }
-        else
-        {
-            context.setResourceBase("src/main/resources_web/webapp")
-            context.setInitParameter("org.eclipse.jetty.servlet.Default.maxCachedFiles", "0")
-        }
-
-        context.addEventListener(new ScalatraListener)
-        context.addServlet(classOf[ApiServlet], "/api/*")
-
-        server.setHandler(context)
-
-        server.start()
-        server.join()
-    }
+    start()
+    ActivityLogger.start()
+    JettyServer.start()
 }
