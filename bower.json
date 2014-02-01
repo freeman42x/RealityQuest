@@ -1,9 +1,9 @@
 {
   "name": "RealityQuest",
   "dependencies": {
-    "angular": "1.2.7",
-    "angular-ui-router": "0.2.7",
-    "angular-animate": "1.2.7",
+    "angular": "1.2.10",
+    "angular-ui-router": "0.2.8",
+    "angular-animate": "1.2.10",
     "AngularJS-Toaster": "0.4.1",
     "angular-loading-bar": "0.2.0",
     "json3": "3.2.6",
@@ -12,10 +12,15 @@
     "lodash": "2.4.1",
     "d3": "3.3.13",
     "nvd3": "1.1.15-beta",
-    "angularjs-nvd3-directives": "0.0.5-beta"
+    "angularjs-nvd3-directives": "0.0.5-beta",
+    "angular-ui-bootstrap-bower": "0.10.0",
+    "DefinitelyTyped": "*",
+    "momentjs": "2.5.1",
+    "highcharts-ng": "0.0.4",
+    "highcharts.com": "3.0.9"
   },
   "resolutions": {
-    "angular": "1.2.7",
+    "angular": "1.2.10",
     "jquery": "1.10.2",
     "d3": "3.3.13",
     "nvd3": "1.1.15-beta"

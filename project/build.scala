@@ -49,6 +49,9 @@ object build extends Build
                 "org.scalafx"             %  "scalafx_2.10"      % "1.0.0-M6",
                 "org.scalatra"            %% "scalatra"          % ScalatraVersion,
                 "org.scalatra"            %% "scalatra-specs2"   % ScalatraVersion % "test",
+                "org.scalatra"            %% "scalatra-json"     % "2.2.2",
+                "org.json4s"              %% "json4s-jackson"    % "3.2.6",
+                "org.json4s"              %  "json4s-ext_2.10"   % "3.1.0",
                 "org.eclipse.jetty"       %  "jetty-webapp"      % "8.1.8.v20121106" % "container;compile",
                 "org.eclipse.jetty.orbit" %  "javax.servlet"     % "3.0.0.v201112011016" % "container;provided;test" artifacts Artifact("javax.servlet", "jar", "jar")
             )

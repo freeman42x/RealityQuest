@@ -18,7 +18,6 @@ import java.awt.event.{ActionEvent, ActionListener}
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.webapp.WebAppContext
 import org.scalatra.servlet.ScalatraListener
-import org.eclipse.jetty.servlet.DefaultServlet
 import scala.concurrent.{ExecutionContext, Future}
 
 object ApplicationGui extends JFXApp
@@ -152,6 +151,7 @@ object ApplicationGui extends JFXApp
     firstTime = true
     Platform.setImplicitExit(false)
     hide(stage)
+
     new Main
 
     import ExecutionContext.Implicits.global
@@ -174,7 +174,7 @@ object ApplicationGui extends JFXApp
         }
 
         context.addEventListener(new ScalatraListener)
-        context.addServlet(classOf[DefaultServlet], "/?")
+        context.addServlet(classOf[ApiServlet], "/api/*")
 
         server.setHandler(context)
 

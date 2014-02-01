@@ -17,19 +17,26 @@
   <!--[if lt IE 9]>
   <script src="libs/es5-shim-2.3.0.min.js"></script>
   <script src="libs/json3-3.2.6.min.js"></script>
-  <script src="libs/jquery-1.10.2.min.js"></script>
   <![endif]-->
 
   <div toaster-container toaster-options="{'time-out': 3000, 'position-class': 'toast-bottom-right', 'newest-on-top': false}"></div>
 
-  <script src="libs/angular-1.2.7.js"></script>
-  <script src="libs/d3-3.3.13.js"></script>
-  <script src="libs/nv.d3-1.1.15-beta.js"></script>
-  <script src="libs/angularjs-nvd3-directives-0.0.5-beta.js"></script>
-  <link rel="stylesheet" href="stylesheets/nv.d3-1.1.15-beta.css"/>
+  <script src="libs/lodash-2.4.1.js"></script>
+  <script src="libs/moment-2.5.1.js"></script>
+
+  <script src="libs/jquery-1.10.2.min.js"></script>
+  <script src="libs/highstock-3.0.9.src.js"></script>
+
+  <script src="libs/angular-1.2.10.js"></script>
+  <script src="libs/angular-ui-router-0.2.8.js"></script>
+  <script src="libs/ui-bootstrap-tpls-0.10.0.js"></script>
+  <script src="libs/highcharts-ng-0.0.4.js"></script>
 
   <script src="scripts/app.js"></script>
 
-  <div class="container" ui-view=""></div>
-  </body>
+  <script src="scripts/controllers/home.js"></script>
+  <script src="scripts/controllers/settings.js"></script>
+
+  <div class="container" ui-view></div>
+</body>
 </html>
