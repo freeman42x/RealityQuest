@@ -16,9 +16,10 @@ object JettyServer
             val port = if (System.getenv("PORT") != null) System.getenv("PORT").toInt else 8080
             val server = new Server(port)
             val context = new WebAppContext()
-            context setContextPath "/"
+            context.setContextPath("/")
+            context.setInitParameter("org.scalatra.LifeCycle", "com.github.razvanpanda.realityquest.ScalatraBootstrap")
 
-            if (getClass.getClassLoader.getResource("ScalatraBootstrap.class").getPath.startsWith("jar:"))
+            if (getClass.getClassLoader.getResource("com/github/razvanpanda/realityquest/ScalatraBootstrap.class").getPath.startsWith("jar:"))
             {
                 val webappPath = getClass.getClassLoader.getResource("webapp").toExternalForm
                 context.setResourceBase(webappPath)
