@@ -1,5 +1,6 @@
 package com.github.razvanpanda.realityquest
 
+import scala.concurrent.duration._
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
@@ -15,6 +16,7 @@ import javafx.stage.{WindowEvent, Stage}
 import javax.imageio.ImageIO
 import javafx.event.EventHandler
 import java.awt.event.{ActionEvent, ActionListener}
+import akka.actor.{Props, ActorSystem}
 
 object ApplicationMain extends JFXApp
 {
@@ -152,6 +154,11 @@ object ApplicationMain extends JFXApp
     }
 
     start()
-    ActivityLogger.start()
+
+    val system = ActorSystem()
+    val activityLoggerRef = system.actorOf(Props[ActivityLogger])
+    import system.dispatcher
+    system.scheduler.schedule(0 seconds, 1 seconds, activityLoggerRef, "log")
+
     JettyServer.start()
 }
