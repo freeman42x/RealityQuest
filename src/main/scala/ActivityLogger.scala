@@ -12,6 +12,12 @@ import scala.concurrent.Future
 import com.github.razvanpanda.realityquest.sensors.LockStatus.GetLockStatus
 import com.github.razvanpanda.realityquest.sensors.WindowStatus.GetData
 import com.github.razvanpanda.realityquest.sensors.IdleStatus.GetIdleStatus
+import com.github.razvanpanda.realityquest.ActivityLogger.Log
+
+object ActivityLogger
+{
+    case class Log()
+}
 
 class ActivityLogger extends Actor
 {
@@ -37,7 +43,7 @@ class ActivityLogger extends Actor
     val idleStatusActor = context.actorOf(Props[IdleStatus])
     def receive =
     {
-        case "log" =>
+        case Log =>
             implicit val timeout = Timeout(2000, MILLISECONDS)
             val f1 = windowStatusActor ? GetData
             val f2 = lockStatusActor ? GetLockStatus

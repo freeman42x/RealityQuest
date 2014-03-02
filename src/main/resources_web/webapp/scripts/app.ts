@@ -6,7 +6,7 @@
 'use strict';
 
 angular
-    .module('app', ['ui.router' , 'highcharts-ng'])
+    .module('app', ['ui.router' , 'highcharts-ng', 'ngAnimate'])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider)
     {
         $locationProvider.hashPrefix('!');

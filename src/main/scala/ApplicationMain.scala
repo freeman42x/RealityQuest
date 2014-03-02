@@ -17,6 +17,7 @@ import javax.imageio.ImageIO
 import javafx.event.EventHandler
 import java.awt.event.{ActionEvent, ActionListener}
 import akka.actor.{Props, ActorSystem}
+import com.github.razvanpanda.realityquest.ActivityLogger.Log
 
 object ApplicationMain extends JFXApp
 {
@@ -135,7 +136,7 @@ object ApplicationMain extends JFXApp
                 if (SystemTray.isSupported)
                 {
                     stage.hide()
-                    if (firstTime)
+                    if (false) // TODO firstTime
                     {
                         trayIcon.displayMessage(
                             "Minimized to tray.",
@@ -158,7 +159,7 @@ object ApplicationMain extends JFXApp
     val system = ActorSystem()
     val activityLoggerRef = system.actorOf(Props[ActivityLogger])
     import system.dispatcher
-    system.scheduler.schedule(0 seconds, 1 seconds, activityLoggerRef, "log")
+    system.scheduler.schedule(0.seconds, 1.seconds, activityLoggerRef, Log)
 
     JettyServer.start()
 }

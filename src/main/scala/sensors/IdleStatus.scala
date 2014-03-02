@@ -42,7 +42,7 @@ class IdleStatus extends Actor with ActorLogging
 
         val system = akka.actor.ActorSystem("system")
         import system.dispatcher
-        system.scheduler.schedule(0 milliseconds, 1000 milliseconds, new Runnable()
+        system.scheduler.schedule(0.milliseconds, 1000.milliseconds, new Runnable()
         {
             def run() =
             {
