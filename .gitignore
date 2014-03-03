@@ -1,0 +1,7 @@
+/target
+/.idea
+/db
+/project/target
+/project/project
+/.idea_modules
+/bower_components

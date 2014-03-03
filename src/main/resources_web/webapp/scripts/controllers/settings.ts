@@ -2,9 +2,9 @@
 
 'use strict';
 
-angular
-    .module('app')
-    .controller('SettingsCtrl', function ()
-    {
-
-    });
+angular.
+module('app').
+controller('SettingsCtrl', function ($scope)
+{
+    $scope.radioModel = 'Enabled';
+});

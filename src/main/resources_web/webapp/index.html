@@ -8,29 +8,24 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>RealityQuest</title>
   <meta name="viewport" content="width=device-width">
+  <link href="stylesheets/bootstrap-3.1.1.css" rel="stylesheet">
   <link href="stylesheets/main.css" rel="stylesheet">
 </head>
 <body ng-app="app">
-  <!--[if lt IE 7]>
-  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-  <![endif]-->
-
-  <!--[if lt IE 9]>
-  <script src="libs/es5-shim-2.3.0.js"></script>
-  <script src="libs/json3-3.3.0.js"></script>
-  <![endif]-->
 
   <div toaster-container toaster-options="{'time-out': 3000, 'position-class': 'toast-bottom-right', 'newest-on-top': false}"></div>
 
   <script src="libs/lodash-2.4.1.js"></script>
   <script src="libs/moment-2.5.1.js"></script>
 
-  <script src="libs/jquery-1.11.0.js"></script>
+  <script src="libs/jquery-2.1.0.js"></script>
+  <script src="libs/jquery.atmosphere.js"></script>
   <script src="libs/highstock-3.0.9.js"></script>
 
   <script src="libs/angular-1.2.14.js"></script>
   <script src="libs/angular-animate-1.2.14.js"></script>
   <script src="libs/angular-ui-router-0.2.9.js"></script>
+  <script src="libs/scrollglue-0.0.1.js"></script>
   <script src="libs/ui-bootstrap-tpls-0.10.0.js"></script>
   <script src="libs/highcharts-ng-0.0.4.js"></script>
 
@@ -38,12 +33,25 @@
 
   <script src="scripts/controllers/home.js"></script>
   <script src="scripts/controllers/settings.js"></script>
+  <script src="scripts/controllers/log.js"></script>
 
-  <!--<div class="container" ui-view></div>-->
-  <div class="row">
-    <div class="span12 ui-view-container">
-      <div class="well" ui-view></div>
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#!/home">Reality Quest</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="#!/home">Home</a></li>
+          <li><a href="#!/log">Log</a></li>
+          <li><a href="#!/settings">Settings</a></li>
+        </ul>
+      </div>
     </div>
+  </nav>
+
+  <div id="container" class="ui-view-container">
+    <div ui-view></div>
   </div>
 </body>
 </html>

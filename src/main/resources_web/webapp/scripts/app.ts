@@ -5,10 +5,9 @@
 
 'use strict';
 
-angular
-    .module('app', ['ui.router' , 'highcharts-ng', 'ngAnimate'])
-    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider)
-    {
+angular.
+    module('app', ['ui.router', 'ui.bootstrap', 'highcharts-ng', 'ngAnimate', 'luegg.directives']).
+    config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
         $locationProvider.hashPrefix('!');
 
         $urlRouterProvider
@@ -32,16 +31,18 @@ angular
                 url: '/settings',
                 templateUrl: '/views/settings.html',
                 controller: 'SettingsCtrl'
+            })
+            .state('log',
+            {
+                url: '/log',
+                templateUrl: '/views/log.html',
+                controller: 'LogCtrl'
             });
 
-        $httpProvider.defaults.transformResponse.push(function(data, responseInfo)
-        {
-            function parseDates(data)
-            {
-                _.forOwn(data, (field, fieldName, data) =>
-                {
-                    if (_.isString(field))
-                    {
+        $httpProvider.defaults.transformResponse.push(function (data, responseInfo) {
+            function parseDates(data) {
+                _.forOwn(data, (field, fieldName, data) => {
+                    if (_.isString(field)) {
                         var momentDate = moment(field);
                         if (momentDate.isValid())
                             data[fieldName] = momentDate.toDate();

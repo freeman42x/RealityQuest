@@ -1,6 +1,5 @@
 package com.github.razvanpanda.realityquest
 
-import com.github.razvanpanda.realityquest.servlets.ApiServlet
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.webapp.WebAppContext
 import org.scalatra.servlet.ScalatraListener
@@ -16,6 +15,7 @@ object JettyServer
             val port = if (System.getenv("PORT") != null) System.getenv("PORT").toInt else 8080
             val server = new Server(port)
             val context = new WebAppContext()
+            context.getSessionHandler.getSessionManager.setMaxInactiveInterval(-1) // TODO remove
             context.setContextPath("/")
             context.setInitParameter("org.scalatra.LifeCycle", "com.github.razvanpanda.realityquest.ScalatraBootstrap")
 
@@ -31,12 +31,19 @@ object JettyServer
             }
 
             context.addEventListener(new ScalatraListener)
-            context.addServlet(classOf[ApiServlet], "/api/*")
 
             server.setHandler(context)
 
-            server.start()
-            server.join()
+            try
+            {
+                server.start()
+                server.dump(System.err)
+                server.join()
+            }
+            catch
+            {
+                case t: Throwable => t.printStackTrace(System.err)
+            }
         }
     }
 }

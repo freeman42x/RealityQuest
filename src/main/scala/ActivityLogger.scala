@@ -13,6 +13,9 @@ import com.github.razvanpanda.realityquest.sensors.LockStatus.GetLockStatus
 import com.github.razvanpanda.realityquest.sensors.WindowStatus.GetData
 import com.github.razvanpanda.realityquest.sensors.IdleStatus.GetIdleStatus
 import com.github.razvanpanda.realityquest.ActivityLogger.Log
+import org.scalatra.atmosphere.{JsonMessage, AtmosphereClient}
+import org.json4s._
+import org.json4s.ext.JodaTimeSerializers
 
 object ActivityLogger
 {
@@ -26,72 +29,80 @@ class ActivityLogger extends Actor
     val driver = "org.h2.Driver"
 
     val logItems = TableQuery[LogItemTable]
+    val userSettings = TableQuery[UserSettingTable]
 
-    var previousLogItem: Option[LogItem] = None
+    var previousLogItemOption: Option[LogItem] = None
 
     Database.forURL(connection, driver = driver) withSession
     {
         implicit session =>
-            if (!new File("db/database.h2.db").exists()) logItems.ddl.create
-            previousLogItem = logItems.sortBy(_.BeginDateTime.desc).firstOption
+            if (!new File("db/database.h2.db").exists())
+            {
+                logItems.ddl.create
+                userSettings.ddl.create
+            }
+
+            previousLogItemOption = logItems.sortBy(_.BeginDateTime.desc).firstOption
     }
 
     var collectData: LogItem = null
 
     val windowStatusActor = context.actorOf(Props[WindowStatus])
     val lockStatusActor = context.actorOf(Props[LockStatus])
-    val idleStatusActor = context.actorOf(Props[IdleStatus])
+    // val idleStatusActor = context.actorOf(Props[IdleStatus]) TODO activate from settings
     def receive =
     {
         case Log =>
             implicit val timeout = Timeout(2000, MILLISECONDS)
             val f1 = windowStatusActor ? GetData
             val f2 = lockStatusActor ? GetLockStatus
-            val f3 = idleStatusActor ? GetIdleStatus
-            val future: Future[(LogItem, Boolean, Boolean)] = for
+            // val f3 = idleStatusActor ? GetIdleStatus
+            val future: Future[(LogItem, Boolean)] = for // , Boolean
             {
                 logItemData <- f1.mapTo[LogItem]
                 isLocked <- f2.mapTo[Boolean]
-                isIdle <- f3.mapTo[Boolean]
-            } yield (logItemData, isLocked, isIdle)
+            //    isIdle <- f3.mapTo[Boolean]
+            } yield (logItemData, isLocked)//, isIdle)
 
             future.onSuccess
             {
-                case (logItemData: LogItem, isLocked: Boolean, isIdle: Boolean) =>
+                case (logItemData: LogItem, isLocked: Boolean) => //, isIdle: Boolean) =>
                     Database.forURL(connection, driver = driver) withSession
                     {
                         implicit session =>
-                            var logItem: LogItem = null
+                            var currentLogItem: LogItem = null
                             if (isLocked)
                             {
                                 val dateTimeNow = DateTime.now
-                                logItem = LogItem(None, dateTimeNow, dateTimeNow, "Lock Screen", "")
+                                currentLogItem = LogItem(None, dateTimeNow, dateTimeNow, "Lock Screen", "")
                             }
                             else
-                                logItem = logItemData
+                                currentLogItem = logItemData
 
-                            if (logItem.WindowTitle.isEmpty) logItem = logItem.copy(WindowTitle = "Empty Window Text")
-
-                            val windowTitle = logItem.WindowTitle
-                            val windowClass = logItem.WindowClass
+                            if (currentLogItem.WindowTitle.isEmpty) currentLogItem = currentLogItem.copy(WindowTitle = "Empty Window Text")
 
                             def saveNewLogItem()
                             {
-                                val newLogItemId = logItems returning logItems.map(_.Id) += logItem
-                                previousLogItem = Option(logItem.copy(Id = newLogItemId))
+                                val newLogItemId = logItems returning logItems.map(_.Id) += currentLogItem
+                                previousLogItemOption = Option(currentLogItem.copy(Id = newLogItemId))
                             }
 
-                            previousLogItem match
+                            previousLogItemOption match
                             {
-                                case Some(logItem: LogItem) =>
-                                    val sameApplication = logItem.WindowTitle == windowTitle && logItem.WindowClass == windowClass
-                                    if (sameApplication)
+                                case Some(previousLogItem: LogItem) =>
+                                    val isSameActiveWindow = previousLogItem.WindowTitle == currentLogItem.WindowTitle && previousLogItem.WindowClass == currentLogItem.WindowClass
+                                    if (isSameActiveWindow)
                                     {
-                                        val updatedLogItem = logItem.copy(EndDateTime = DateTime.now)
-                                        logItems.where(_.Id === logItem.Id).update(updatedLogItem)
-                                        previousLogItem = Option(updatedLogItem)
+                                        val updatedLogItem = previousLogItem.copy(EndDateTime = DateTime.now)
+                                        logItems.where(_.Id === previousLogItem.Id).update(updatedLogItem)
+                                        previousLogItemOption = Option(updatedLogItem)
                                     }
-                                    else saveNewLogItem()
+                                    else
+                                    {
+                                        saveNewLogItem()
+                                        implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
+                                        AtmosphereClient.broadcastAll(JsonMessage(Extraction.decompose(currentLogItem)))
+                                    }
 
                                 case None => saveNewLogItem()
                             }

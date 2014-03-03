@@ -45,3 +45,28 @@ to prevent collapsing during animation*/
     -moz-transform:translate3d(100px, 0, 0);
     transform:translate3d(100px, 0, 0);
 }
+
+[scroll-glue] {
+    height: 100px;
+    overflow-y: scroll;
+    border: 1px solid grey;
+}
+
+.log {
+    height: 100%;
+}
+
+html, body, div[ui-view], div[highchart] {
+    height: 100%;
+}
+
+#container {
+    height: 90%;
+}
+
+.navbar {
+    position: relative;
+    min-height: 10%;
+    margin-bottom: 0px;
+    border: 0px solid transparent;
+}
